@@ -24,7 +24,7 @@ notifications:
 deploy:
   - provider: heroku
     api_key: $HEROKU_API_KEY
-    app: curtail-covid
+    app: curtail-covid-sera
     skip_cleanup: true
     on:
       all_branches: true
