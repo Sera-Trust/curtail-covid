@@ -455,7 +455,7 @@ const PatientComponent = (props: any) => {
                     alignItems="center"
                   >
                     <Grid item xs={12} sm={4} style={{ paddingBottom: "0px" }}>
-                      Temperature
+                      Vitals
                     </Grid>
 
                     <Grid item xs={6} sm={4}>
@@ -474,7 +474,6 @@ const PatientComponent = (props: any) => {
                     </Grid>
                     <Grid item xs={6} sm={4}>
                       <TextField
-                        type="number"
                         size="small"
                         required
                         autoComplete="new-patient"
