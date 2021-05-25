@@ -454,6 +454,39 @@ const PatientComponent = (props: any) => {
                     alignContent="center"
                     alignItems="center"
                   >
+                    <Grid item xs={12} sm={4} style={{ paddingBottom: "0px" }}>
+                      Temperature
+                    </Grid>
+
+                    <Grid item xs={6} sm={4}>
+                      <TextField
+                        type="number"
+                        size="small"
+                        required
+                        autoComplete="new-patient"
+                        id="pulse"
+                        name="pulse"
+                        label="Pulse"
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.pulse || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4}>
+                      <TextField
+                        type="number"
+                        size="small"
+                        required
+                        autoComplete="new-patient"
+                        id="bloodPressure"
+                        name="bloodPressure"
+                        label="Blood Pressure"
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.bloodPressure || ""}
+                      />
+                    </Grid>
+
                     <Grid item xs={12} sm={3} style={{ paddingBottom: "0px" }}>
                       Temperature
                     </Grid>
@@ -688,34 +721,6 @@ const PatientComponent = (props: any) => {
                           />
                         }
                         label="Diarrhea"
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            size="small"
-                            color="secondary"
-                            name="pulse"
-                            onChange={handleChange}
-                            value={values.pulse}
-                          />
-                        }
-                        label="Pulse"
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            size="small"
-                            color="secondary"
-                            name="bloodPressure"
-                            onChange={handleChange}
-                            value={values.bloodPressure}
-                          />
-                        }
-                        label="Blood Pressure"
                       />
                     </Grid>
 

@@ -34,6 +34,6 @@ public class Symptoms {
     private Boolean nausea;
     private Boolean sneezing;
     private Boolean diarrhea;
-    private Boolean pulse;
-    private Boolean bloodPressure;
+    private String pulse;
+    private String bloodPressure;
 }

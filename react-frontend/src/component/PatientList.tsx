@@ -26,9 +26,7 @@ const PatientListComponent = (props: any) => {
     },
     { show: true, title: "Address", field: "address" },
     { show: true, title: "Phone Number", field: "phoneNumber" },
-    { show: false, title: "Recent Date", field: "recentDate" },
-    { show: true, title: "# of Days From Onset", field: "impor" },
-    { show: true, title: "Covid Status", field: "covidStatus" },
+    { show: false, title: "Date First Observed", field: "dateFirstObserved" },
     {
       show: true,
       title: "",
