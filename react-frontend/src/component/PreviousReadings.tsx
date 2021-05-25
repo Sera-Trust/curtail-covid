@@ -13,7 +13,7 @@ export const PreviousReadings = (props: any) => {
     <div>
       {props.symptoms && (
         <Paper>
-          <TableContainer>
+          <TableContainer className="previous-reading">
             <Table
               aria-labelledby="tableTitle"
               size={"small"}
@@ -47,7 +47,15 @@ export const PreviousReadings = (props: any) => {
                         Body Ache: {row.bodyAche ? "Yes" : "No"} | Fatigue :
                         {row.fatigue ? "Yes" : "No"} | Loss Of Taste:{" "}
                         {row.lossOfTaste ? "Yes" : "No"} | Loss Of Smell:{" "}
-                        {row.lossOfSmell ? "Yes" : "No"}
+                        {row.lossOfSmell ? "Yes" : "No"}| Breathing Difficulty:{" "}
+                        {row.breathingDifficulty ? "Yes" : "No"}| Sore Throat:{" "}
+                        {row.soreThroat ? "Yes" : "No"}| Headache:{" "}
+                        {row.headache ? "Yes" : "No"}| Nausea:{" "}
+                        {row.nausea ? "Yes" : "No"}| Sneezing:{" "}
+                        {row.sneezing ? "Yes" : "No"}| Diarrhea:{" "}
+                        {row.diarrhea ? "Yes" : "No"}| Pulse:{" "}
+                        {row.pulse ? "Yes" : "No"}| Blood Pressure:{" "}
+                        {row.bloodPressure ? "Yes" : "No"}
                       </TableCell>
                     </TableRow>
                   );

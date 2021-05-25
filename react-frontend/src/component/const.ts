@@ -1,0 +1,18 @@
+export const villages = [
+  "ALWALA",
+  "AMMAPALLE",
+  "BALIJAPALLE",
+  "CHIKARU CHETTU THANDA",
+  "CHILUKUNTONI PALLI",
+  "CHINA MANDADI",
+  "DODDAGUNTAPALLE",
+  "MADIGTLA",
+  "MOJARLA",
+  "PAMIREDDIPALLE",
+  "PAMIREDDIPALLE THANDA",
+  "PEDDAMANDADDI",
+  "VELTOOR",
+  "VERRAIPALLE",
+];
+export const districts = ["WANAPARTHY"];
+export const mandals = ["PEDDAMANDADDI"];

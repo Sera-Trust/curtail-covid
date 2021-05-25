@@ -34,7 +34,13 @@ body {
   max-width: 100px !important;
   width: 100px !important;
 }
-.database-component thead  tr th:first-child {
+.database-component thead tr th:first-child {
   max-width: 100px !important;
   width: 100px !important;
+}
+.previous-reading td:nth-child(3) {
+  width: 200px;
+}
+.previous-reading td:nth-child(5) {
+  width: 200px;
 }

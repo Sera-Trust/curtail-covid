@@ -1,4 +1,11 @@
-import { Button } from "@material-ui/core";
+import {
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -7,12 +14,13 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import axios from "axios";
+import { Form, Formik } from "formik";
 import { withSnackbar } from "notistack";
 import React, { useEffect } from "react";
-import axios from "axios";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { failureToast, successToast } from "../util/util";
-import { Form, Formik } from "formik";
+import { districts, mandals, villages } from "./const";
 import { PreviousReadings } from "./PreviousReadings";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
 const PatientComponent = (props: any) => {
   const history = useHistory();
   const classes = useStyles();
@@ -65,6 +72,14 @@ const PatientComponent = (props: any) => {
       fatigue: values.fatigue,
       lossOfTaste: values.lossOfTaste,
       lossOfSmell: values.lossOfSmell,
+      breathingDifficulty: values.breathingDifficulty,
+      soreThroat: values.soreThroat,
+      headache: values.headache,
+      nausea: values.nausea,
+      sneezing: values.sneezing,
+      diarrhea: values.diarrhea,
+      pulse: values.pulse,
+      bloodPressure: values.bloodPressure,
     };
     let payload: any;
     if (param.id) {
@@ -143,7 +158,10 @@ const PatientComponent = (props: any) => {
   } else {
     defaultvalues.oxygenLevelTime = timeValue;
   }
-
+  if (defaultvalues.dateFirstObserved) {
+  } else {
+    defaultvalues.dateFirstObserved = dateValue;
+  }
   return (
     <React.Fragment>
       <CssBaseline />
@@ -193,7 +211,6 @@ const PatientComponent = (props: any) => {
                     <Grid item xs={6} sm={6}>
                       <TextField
                         size="small"
-                        required
                         autoComplete="new-patient"
                         id="aadharCard"
                         name="aadharCard"
@@ -205,6 +222,7 @@ const PatientComponent = (props: any) => {
                     </Grid>
                     <Grid item xs={6} sm={6}>
                       <TextField
+                        type="number"
                         size="small"
                         required
                         autoComplete="new-patient"
@@ -229,44 +247,83 @@ const PatientComponent = (props: any) => {
                         value={values.address || ""}
                       />
                     </Grid>
-                    <Grid item xs={6} sm={6}>
-                      <TextField
-                        size="small"
-                        required
-                        autoComplete="new-patient"
-                        id="village"
-                        name="village"
-                        label="Village"
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.village || ""}
-                      />
+                    <Grid item xs={6}>
+                      <FormControl>
+                        <InputLabel id="village-label">Village</InputLabel>
+                        <Select
+                          style={{ minWidth: "200px" }}
+                          labelId="village-label"
+                          id="village"
+                          name="village"
+                          autoComplete="new-patient"
+                          required
+                          fullWidth
+                          value={values.village || ""}
+                          defaultValue={values.village || ""}
+                          onChange={handleChange}
+                          label="Village"
+                        >
+                          {villages.map((village: any) => {
+                            return (
+                              <MenuItem value={village} key={village}>
+                                {village}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormControl>
+                        <InputLabel id="mandal-label">Mandal</InputLabel>
+                        <Select
+                          style={{ minWidth: "200px" }}
+                          labelId="mandal-label"
+                          id="mandal"
+                          name="mandal"
+                          autoComplete="new-patient"
+                          required
+                          fullWidth
+                          value={values.mandal || ""}
+                          defaultValue={values.mandal || ""}
+                          onChange={handleChange}
+                          label="Mandal"
+                        >
+                          {mandals.map((mandal: any) => {
+                            return (
+                              <MenuItem value={mandal} key={mandal}>
+                                {mandal}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
                     </Grid>
                     <Grid item xs={6} sm={6}>
-                      <TextField
-                        size="small"
-                        required
-                        autoComplete="new-patient"
-                        id="mandal"
-                        name="mandal"
-                        label="Mandal"
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.mandal || ""}
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={6}>
-                      <TextField
-                        size="small"
-                        required
-                        autoComplete="new-patient"
-                        id="district"
-                        name="district"
-                        label="District"
-                        fullWidth
-                        onChange={handleChange}
-                        value={values.district || ""}
-                      />
+                      <FormControl>
+                        <InputLabel id="district-label">District</InputLabel>
+                        <Select
+                          style={{ minWidth: "200px" }}
+                          labelId="district-label"
+                          id="district"
+                          name="district"
+                          autoComplete="new-patient"
+                          required
+                          fullWidth
+                          value={values.district || ""}
+                          defaultValue={values.district || ""}
+                          onChange={handleChange}
+                          label="Village"
+                        >
+                          {districts.map((district: any) => {
+                            return (
+                              <MenuItem value={district} key={district}>
+                                {district}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
                     </Grid>
                     <Grid item xs={6} sm={6}>
                       <TextField
@@ -281,7 +338,7 @@ const PatientComponent = (props: any) => {
                         value={values.state || ""}
                       />
                     </Grid>
-                    <Grid item xs={6} sm={6}>
+                    <Grid item xs={6} sm={4}>
                       <TextField
                         size="small"
                         required
@@ -294,6 +351,58 @@ const PatientComponent = (props: any) => {
                         value={values.pincode || ""}
                       />
                     </Grid>
+
+                    <Grid item xs={3} sm={2}>
+                      <FormControl>
+                        <InputLabel id="gender-label">Gender</InputLabel>
+                        <Select
+                          style={{ minWidth: "100px" }}
+                          labelId="gender-label"
+                          id="gender"
+                          name="gender"
+                          required
+                          value={values.gender || ""}
+                          defaultValue={values.gender || ""}
+                          onChange={handleChange}
+                          label="Gender"
+                        >
+                          <MenuItem value={"Male"}>Male</MenuItem>
+                          <MenuItem value={"Female"}>Female</MenuItem>
+                          <MenuItem value={"-"}>-</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={3} sm={1}>
+                      <TextField
+                        type="number"
+                        size="small"
+                        required
+                        autoComplete="new-patient"
+                        id="age"
+                        name="age"
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.age || ""}
+                        label={"Age"}
+                      />
+                    </Grid>
+
+                    <Grid item xs={6} style={{ paddingBottom: "0px" }}>
+                      <TextField
+                        InputLabelProps={{ shrink: true }}
+                        type="date"
+                        size="small"
+                        required
+                        autoComplete="new-patient"
+                        id="dateFirstObserved"
+                        name="dateFirstObserved"
+                        fullWidth
+                        onChange={handleChange}
+                        value={values.dateFirstObserved || ""}
+                        label={"Date First Observed Symptom"}
+                      />
+                    </Grid>
+
                     <Grid item xs={12}>
                       <TextField
                         size="small"
@@ -310,7 +419,6 @@ const PatientComponent = (props: any) => {
                       <TextField
                         autoComplete="new-patient"
                         size="small"
-                        required
                         id="emergencyContactName"
                         name="emergencyContactName"
                         label="Emergency Contact Name"
@@ -322,7 +430,6 @@ const PatientComponent = (props: any) => {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         size="small"
-                        required
                         autoComplete="new-patient"
                         id="emergencyContactNumber"
                         name="emergencyContactNumber"
@@ -338,17 +445,21 @@ const PatientComponent = (props: any) => {
               <Paper className={classes.paper}>
                 <React.Fragment>
                   <Typography variant="h6">Covid Symptoms</Typography>
+                  <Grid item xs={12} style={{ padding: "0px" }}>
+                    <Divider />
+                  </Grid>
                   <Grid
                     container
                     spacing={3}
                     alignContent="center"
                     alignItems="center"
                   >
-                    <Grid item xs={3} sm={3}>
+                    <Grid item xs={12} sm={3} style={{ paddingBottom: "0px" }}>
                       Temperature
                     </Grid>
-                    <Grid item xs={3} sm={3}>
+                    <Grid item xs={6} sm={3}>
                       <TextField
+                        type="number"
                         size="small"
                         required
                         autoComplete="new-patient"
@@ -360,7 +471,7 @@ const PatientComponent = (props: any) => {
                         value={values.temperature || ""}
                       />
                     </Grid>
-                    <Grid item xs={3} sm={3} style={{ paddingBottom: "0px" }}>
+                    <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
                       <TextField
                         type="date"
                         size="small"
@@ -373,7 +484,7 @@ const PatientComponent = (props: any) => {
                         value={values.temperatureDate || ""}
                       />
                     </Grid>
-                    <Grid item xs={3} sm={3} style={{ paddingBottom: "0px" }}>
+                    <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
                       <TextField
                         type="time"
                         size="small"
@@ -387,11 +498,15 @@ const PatientComponent = (props: any) => {
                       />
                     </Grid>
 
-                    <Grid item xs={3} sm={3}>
+                    <Grid item xs={12} style={{ padding: "0px" }}>
+                      <Divider />
+                    </Grid>
+                    <Grid item xs={12} sm={3} style={{ paddingBottom: "0px" }}>
                       Oxygen Level
                     </Grid>
-                    <Grid item xs={3} sm={3}>
+                    <Grid item xs={6} sm={3}>
                       <TextField
+                        type="number"
                         size="small"
                         required
                         autoComplete="new-patient"
@@ -403,7 +518,7 @@ const PatientComponent = (props: any) => {
                         value={values.oxygenLevel || ""}
                       />
                     </Grid>
-                    <Grid item xs={3} sm={3} style={{ paddingBottom: "0px" }}>
+                    <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
                       <TextField
                         type="date"
                         size="small"
@@ -416,7 +531,7 @@ const PatientComponent = (props: any) => {
                         value={values.oxygenLevelDate || ""}
                       />
                     </Grid>
-                    <Grid item xs={3} sm={3} style={{ paddingBottom: "0px" }}>
+                    <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
                       <TextField
                         type="time"
                         size="small"
@@ -429,8 +544,13 @@ const PatientComponent = (props: any) => {
                         value={values.oxygenLevelTime || ""}
                       />
                     </Grid>
-
-                    <Grid item xs={6}>
+                    <Grid item xs={12} style={{ padding: "0px" }}>
+                      <Divider />
+                    </Grid>
+                    <Grid item xs={12} style={{ paddingBottom: "0px" }}>
+                      Symptoms
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -444,7 +564,7 @@ const PatientComponent = (props: any) => {
                         label="Body Ache"
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -458,7 +578,7 @@ const PatientComponent = (props: any) => {
                         label="Fatigue"
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -472,7 +592,7 @@ const PatientComponent = (props: any) => {
                         label="Loss of Taste"
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -486,6 +606,119 @@ const PatientComponent = (props: any) => {
                         label="Loss Of Smell"
                       />
                     </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="breathingDifficulty"
+                            onChange={handleChange}
+                            value={values.breathingDifficulty}
+                          />
+                        }
+                        label="Breathing Difficulty"
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="soreThroat"
+                            onChange={handleChange}
+                            value={values.soreThroat}
+                          />
+                        }
+                        label="Sore Throat"
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="headache"
+                            onChange={handleChange}
+                            value={values.headache}
+                          />
+                        }
+                        label="Headache"
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="nausea"
+                            onChange={handleChange}
+                            value={values.nausea}
+                          />
+                        }
+                        label="Nausea"
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="sneezing"
+                            onChange={handleChange}
+                            value={values.sneezing}
+                          />
+                        }
+                        label="Sneezing"
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="diarrhea"
+                            onChange={handleChange}
+                            value={values.diarrhea}
+                          />
+                        }
+                        label="Diarrhea"
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="pulse"
+                            onChange={handleChange}
+                            value={values.pulse}
+                          />
+                        }
+                        label="Pulse"
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={4} style={{ paddingBottom: "0px" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            color="secondary"
+                            name="bloodPressure"
+                            onChange={handleChange}
+                            value={values.bloodPressure}
+                          />
+                        }
+                        label="Blood Pressure"
+                      />
+                    </Grid>
+
                     <Grid item xs={12} style={{ textAlign: "center" }}>
                       <Button
                         variant="contained"
