@@ -2,12 +2,12 @@ import {
   Button,
   Divider,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
 } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -19,10 +19,53 @@ import { Form, Formik } from "formik";
 import { withSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import * as Yup from "yup";
 import { failureToast, successToast } from "../util/util";
 import { districts, mandals, villages } from "./const";
 import { PreviousReadings } from "./PreviousReadings";
 
+const ValidationSchema = Yup.object().shape({
+  firstName: Yup.string().required("Required"),
+  surname: Yup.string().required("Required"),
+  phoneNumber: Yup.number()
+    .test(
+      "len",
+      "Must be exactly 10 Digits",
+      (val: any) => val?.toString()?.length === 10
+    )
+    .required("Required"),
+  address: Yup.string().required("Required"),
+  village: Yup.string().required("Required"),
+  mandal: Yup.string().required("Required"),
+  district: Yup.string().required("Required"),
+  state: Yup.string().required("Required"),
+  pincode: Yup.number()
+    .test(
+      "len",
+      "Must be exactly 6 Digits",
+      (val: any) => val?.toString()?.length === 6
+    )
+    .required("Required"),
+  gender: Yup.string().required("Required"),
+  age: Yup.number().required("Required"),
+  dateFirstObserved: Yup.string().required("Required"),
+  emergencyContactName: Yup.string().required("Required"),
+  emergencyContactNumber: Yup.number()
+    .test(
+      "len",
+      "Must be exactly 10 Digits",
+      (val: any) => val?.toString()?.length === 10
+    )
+    .required("Required"),
+  pulse: Yup.string().required("Required"),
+  bloodPressure: Yup.string().required("Required"),
+  temperature: Yup.string().required("Required"),
+  temperatureDate: Yup.string().required("Required"),
+  temperatureTime: Yup.string().required("Required"),
+  oxygenLevel: Yup.string().required("Required"),
+  oxygenLevelDate: Yup.string().required("Required"),
+  oxygenLevelTime: Yup.string().required("Required"),
+});
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
@@ -55,7 +98,32 @@ const PatientComponent = (props: any) => {
   const history = useHistory();
   const classes = useStyles();
   const { params } = useRouteMatch();
-  const [patient, setPatient] = React.useState<any>({});
+  const [patient, setPatient] = React.useState<any>({
+    firstName: "",
+    surname: "",
+    aadharCard: "",
+    phoneNumber: "",
+    address: "",
+    village: "",
+    mandal: "",
+    district: "",
+    state: "",
+    pincode: "",
+    gender: "",
+    age: "",
+    dateFirstObserved: "",
+    nearestLandmark: "",
+    emergencyContactName: "",
+    emergencyContactNumber: "",
+    pulse: "",
+    bloodPressure: "",
+    temperature: "",
+    temperatureDate: "",
+    temperatureTime: "",
+    oxygenLevel: "",
+    oxygenLevelDate: "",
+    oxygenLevelTime: "",
+  });
   const param: any = params;
   const cancelPatient = () => {
     history.push("/patientList");
@@ -126,7 +194,7 @@ const PatientComponent = (props: any) => {
   const defaultvalues = { ...patient };
   const currentDate = new Date();
   console.log(defaultvalues.temperatureDate);
-  let month: any = currentDate.getMonth();
+  let month: any = currentDate.getMonth() + 1;
   let hours: any = currentDate.getHours();
   let minutes: any = currentDate.getMinutes();
 
@@ -142,11 +210,11 @@ const PatientComponent = (props: any) => {
   const dateValue =
     currentDate.getFullYear() + "-" + month + "-" + currentDate.getDate();
   const timeValue = hours + ":" + minutes;
-  if (defaultvalues.temperatureDate) {
+  if (defaultvalues.temperatureDate && defaultvalues.temperatureDate !== "") {
   } else {
     defaultvalues.temperatureDate = dateValue;
   }
-  if (defaultvalues.oxygenLevelDate) {
+  if (defaultvalues.oxygenLevelDate && defaultvalues.oxygenLevelDate !== "") {
   } else {
     defaultvalues.oxygenLevelDate = dateValue;
   }
@@ -158,22 +226,25 @@ const PatientComponent = (props: any) => {
   } else {
     defaultvalues.oxygenLevelTime = timeValue;
   }
-  if (defaultvalues.dateFirstObserved) {
+  if (
+    defaultvalues.dateFirstObserved &&
+    defaultvalues.dateFirstObserved !== ""
+  ) {
   } else {
     defaultvalues.dateFirstObserved = dateValue;
   }
   return (
     <React.Fragment>
-      <CssBaseline />
       <Formik
         initialValues={{ ...defaultvalues }}
         enableReinitialize
+        validationSchema={ValidationSchema}
         onSubmit={(values: any) => {
           savePatient(values);
         }}
       >
         {({ errors, touched, values, handleChange }) => (
-          <Form autoComplete="new-patient">
+          <Form autoComplete="new-patient" name="new-patient" noValidate>
             <main className={classes.layout}>
               <Paper className={classes.paper}>
                 <Typography component="h3" variant="h4" align="center">
@@ -193,6 +264,10 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.firstName || ""}
+                        error={
+                          errors.firstName && touched.firstName ? true : false
+                        }
+                        helperText={touched.firstName && errors.firstName}
                       />
                     </Grid>
                     <Grid item xs={6} sm={6}>
@@ -206,6 +281,8 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.surname || ""}
+                        error={errors.surname && touched.surname ? true : false}
+                        helperText={touched.surname && errors.surname}
                       />
                     </Grid>
                     <Grid item xs={6} sm={6}>
@@ -232,6 +309,12 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.phoneNumber || ""}
+                        error={
+                          errors.phoneNumber && touched.phoneNumber
+                            ? true
+                            : false
+                        }
+                        helperText={touched.phoneNumber && errors.phoneNumber}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -245,10 +328,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.address || ""}
+                        error={errors.address && touched.address ? true : false}
+                        helperText={touched.address && errors.address}
                       />
                     </Grid>
-                    <Grid item xs={6}>
-                      <FormControl>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl
+                        error={errors.village && touched.village ? true : false}
+                      >
                         <InputLabel id="village-label">Village</InputLabel>
                         <Select
                           style={{ minWidth: "200px" }}
@@ -271,10 +358,15 @@ const PatientComponent = (props: any) => {
                             );
                           })}
                         </Select>
+                        {errors.village && (
+                          <FormHelperText>Required</FormHelperText>
+                        )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={6}>
-                      <FormControl>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl
+                        error={errors.mandal && touched.mandal ? true : false}
+                      >
                         <InputLabel id="mandal-label">Mandal</InputLabel>
                         <Select
                           style={{ minWidth: "200px" }}
@@ -288,6 +380,7 @@ const PatientComponent = (props: any) => {
                           defaultValue={values.mandal || ""}
                           onChange={handleChange}
                           label="Mandal"
+                          error={errors.mandal && touched.mandal ? true : false}
                         >
                           {mandals.map((mandal: any) => {
                             return (
@@ -296,11 +389,18 @@ const PatientComponent = (props: any) => {
                               </MenuItem>
                             );
                           })}
-                        </Select>
+                        </Select>{" "}
+                        {errors.mandal && (
+                          <FormHelperText>Required</FormHelperText>
+                        )}
                       </FormControl>
                     </Grid>
                     <Grid item xs={6} sm={6}>
-                      <FormControl>
+                      <FormControl
+                        error={
+                          errors.district && touched.district ? true : false
+                        }
+                      >
                         <InputLabel id="district-label">District</InputLabel>
                         <Select
                           style={{ minWidth: "200px" }}
@@ -313,7 +413,10 @@ const PatientComponent = (props: any) => {
                           value={values.district || ""}
                           defaultValue={values.district || ""}
                           onChange={handleChange}
-                          label="Village"
+                          label="District"
+                          error={
+                            errors.district && touched.district ? true : false
+                          }
                         >
                           {districts.map((district: any) => {
                             return (
@@ -322,10 +425,13 @@ const PatientComponent = (props: any) => {
                               </MenuItem>
                             );
                           })}
-                        </Select>
+                        </Select>{" "}
+                        {errors.district && (
+                          <FormHelperText>Required</FormHelperText>
+                        )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={6} sm={6}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
                         size="small"
                         required
@@ -336,12 +442,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.state || ""}
+                        error={errors.state && touched.state ? true : false}
                       />
                     </Grid>
-                    <Grid item xs={6} sm={4}>
+                    <Grid item xs={6} sm={3}>
                       <TextField
                         size="small"
                         required
+                        type="number"
                         autoComplete="new-patient"
                         id="pincode"
                         name="pincode"
@@ -349,11 +457,15 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.pincode || ""}
+                        error={errors.pincode && touched.pincode ? true : false}
+                        helperText={touched.pincode && errors.pincode}
                       />
                     </Grid>
 
-                    <Grid item xs={3} sm={2}>
-                      <FormControl>
+                    <Grid item xs={6} sm={2}>
+                      <FormControl
+                        error={errors.gender && touched.gender ? true : false}
+                      >
                         <InputLabel id="gender-label">Gender</InputLabel>
                         <Select
                           style={{ minWidth: "100px" }}
@@ -369,7 +481,10 @@ const PatientComponent = (props: any) => {
                           <MenuItem value={"Male"}>Male</MenuItem>
                           <MenuItem value={"Female"}>Female</MenuItem>
                           <MenuItem value={"-"}>-</MenuItem>
-                        </Select>
+                        </Select>{" "}
+                        {errors.gender && (
+                          <FormHelperText>Required</FormHelperText>
+                        )}
                       </FormControl>
                     </Grid>
                     <Grid item xs={3} sm={1}>
@@ -384,10 +499,12 @@ const PatientComponent = (props: any) => {
                         onChange={handleChange}
                         value={values.age || ""}
                         label={"Age"}
+                        error={errors.age && touched.age ? true : false}
+                        helperText={touched.age && errors.age}
                       />
                     </Grid>
 
-                    <Grid item xs={6} style={{ paddingBottom: "0px" }}>
+                    <Grid item xs={12} sm={6} style={{ paddingBottom: "0px" }}>
                       <TextField
                         InputLabelProps={{ shrink: true }}
                         type="date"
@@ -400,6 +517,14 @@ const PatientComponent = (props: any) => {
                         onChange={handleChange}
                         value={values.dateFirstObserved || ""}
                         label={"Date First Observed Symptom"}
+                        error={
+                          errors.dateFirstObserved && touched.dateFirstObserved
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.dateFirstObserved && errors.dateFirstObserved
+                        }
                       />
                     </Grid>
 
@@ -413,6 +538,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.nearestLandmark || ""}
+                        error={
+                          errors.nearestLandmark && touched.nearestLandmark
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.nearestLandmark && errors.nearestLandmark
+                        }
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -425,6 +558,16 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.emergencyContactName || ""}
+                        error={
+                          errors.emergencyContactName &&
+                          touched.emergencyContactName
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.emergencyContactName &&
+                          errors.emergencyContactName
+                        }
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -435,8 +578,19 @@ const PatientComponent = (props: any) => {
                         name="emergencyContactNumber"
                         label="Emergency Contact Number"
                         fullWidth
+                        type="number"
                         onChange={handleChange}
                         value={values.emergencyContactNumber || ""}
+                        error={
+                          errors.emergencyContactNumber &&
+                          touched.emergencyContactNumber
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.emergencyContactNumber &&
+                          errors.emergencyContactNumber
+                        }
                       />
                     </Grid>
                   </Grid>
@@ -454,7 +608,7 @@ const PatientComponent = (props: any) => {
                     alignContent="center"
                     alignItems="center"
                   >
-                    <Grid item xs={12} sm={4} style={{ paddingBottom: "0px" }}>
+                    <Grid item xs={12} sm={3} style={{ paddingBottom: "0px" }}>
                       Vitals
                     </Grid>
 
@@ -470,6 +624,8 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.pulse || ""}
+                        error={errors.pulse && touched.pulse ? true : false}
+                        helperText={touched.pulse && errors.pulse}
                       />
                     </Grid>
                     <Grid item xs={6} sm={4}>
@@ -483,6 +639,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.bloodPressure || ""}
+                        error={
+                          errors.bloodPressure && touched.bloodPressure
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.bloodPressure && errors.bloodPressure
+                        }
                       />
                     </Grid>
 
@@ -501,6 +665,12 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.temperature || ""}
+                        error={
+                          errors.temperature && touched.temperature
+                            ? true
+                            : false
+                        }
+                        helperText={touched.temperature && errors.temperature}
                       />
                     </Grid>
                     <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
@@ -514,6 +684,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.temperatureDate || ""}
+                        error={
+                          errors.temperatureDate && touched.temperatureDate
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.temperatureDate && errors.temperatureDate
+                        }
                       />
                     </Grid>
                     <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
@@ -527,6 +705,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.temperatureTime || ""}
+                        error={
+                          errors.temperatureTime && touched.temperatureTime
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.temperatureTime && errors.temperatureTime
+                        }
                       />
                     </Grid>
 
@@ -548,6 +734,12 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.oxygenLevel || ""}
+                        error={
+                          errors.oxygenLevel && touched.oxygenLevel
+                            ? true
+                            : false
+                        }
+                        helperText={touched.oxygenLevel && errors.oxygenLevel}
                       />
                     </Grid>
                     <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
@@ -561,6 +753,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.oxygenLevelDate || ""}
+                        error={
+                          errors.oxygenLevelDate && touched.oxygenLevelDate
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.oxygenLevelDate && errors.oxygenLevelDate
+                        }
                       />
                     </Grid>
                     <Grid item xs={6} sm={3} style={{ paddingBottom: "0px" }}>
@@ -574,6 +774,14 @@ const PatientComponent = (props: any) => {
                         fullWidth
                         onChange={handleChange}
                         value={values.oxygenLevelTime || ""}
+                        error={
+                          errors.oxygenLevelTime && touched.oxygenLevelTime
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          touched.oxygenLevelTime && errors.oxygenLevelTime
+                        }
                       />
                     </Grid>
                     <Grid item xs={12} style={{ padding: "0px" }}>

@@ -1,39 +1,24 @@
 import { Box, Button } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Container from "@material-ui/core/Container";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 import { dashboardRoutes } from "../routes/curtail-covid";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  })
-);
-
 export default function Dashboard() {
   const history = useHistory();
-  const classes = useStyles();
   const navigate = () => {
     history.push("/patientList");
   };
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed">
+    <React.Fragment>
+      <AppBar
+        position="static"
+        style={{ minWidth: "100Vw", overflowX: "auto" }}
+      >
         <Toolbar>
           <Typography
             variant="h6"
@@ -64,21 +49,19 @@ export default function Dashboard() {
           </Box>
         </Toolbar>
       </AppBar>
-      <main>
-        <Container>
-          <Grid container style={{ marginTop: "80px" }}>
-            <Switch>
-              {dashboardRoutes.map((route: any) => {
-                return (
-                  <Route path={route.path} key={route.path} exact>
-                    {route.component}
-                  </Route>
-                );
-              })}
-            </Switch>
-          </Grid>
-        </Container>
-      </main>
-    </div>
+      <Container>
+        <Grid container style={{ marginTop: "80px" }}>
+          <Switch>
+            {dashboardRoutes.map((route: any) => {
+              return (
+                <Route path={route.path} key={route.path} exact>
+                  {route.component}
+                </Route>
+              );
+            })}
+          </Switch>
+        </Grid>
+      </Container>
+    </React.Fragment>
   );
 }
